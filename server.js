@@ -6,7 +6,8 @@ import connectDB from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
 import categoryRoutes from './routes/CategoryRoutes.js';
 import productRoutes from "./routes/productRoutes.js";
-import cors from 'cors'
+import cors from 'cors';
+// import { Path, dirname } from 'path';
 
 // Create an instance of the Express app
 const app = express();
@@ -35,7 +36,12 @@ app.use("/api/v1/category", categoryRoutes);
 
 app.use("/api/v1/product", productRoutes);
 
+// //static files 
+// app.use(express.static(path.join(--dirname,'./client/build')));
 
+// app.get("*", function(req,res){
+//     res.SendFile(path.join(--dirname,'./client/build/index.html'));
+// });
 // Rest API
 app.get('/', (req, res) => {
     res.send("Welcome to e-commerce app");
