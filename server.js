@@ -44,7 +44,7 @@ app.use("/api/v1/product", productRoutes);
 // });
 // Rest API
 app.get('/', (req, res) => {
-    res.send("Welcome to e-commerce app");
+    res.send("Welcome to shop online e-commerce app");
 });
 
 // PORT
