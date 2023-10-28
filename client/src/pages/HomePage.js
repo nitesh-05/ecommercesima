@@ -120,22 +120,23 @@ const HomePage = () => {
       <div className="container-fluid row mt-3 home-page">
         <div className="col-md-3 filters">
           <h4 className="text-center">Filter By Category</h4>
-          <div className="d-flex flex-column">
-            {categories?.map((c) => (
+          {categories?.map((c) => (
+          <div className="d-flex flex-column" key={c._id}>
               <Checkbox
-                key={c._id}
                 onChange={(e) => handleFilter(e.target.checked, c._id)}
               >
                 {c.name}
               </Checkbox>
-            ))}
           </div>
+            ))}
+
           {/* price filter */}
           <h4 className="text-center mt-4">Filter By Price</h4>
           <div className="d-flex flex-column">
             <Radio.Group onChange={(e) => setRadio(e.target.value)}>
               {Prices?.map((p) => (
                 <div key={p._id}>
+                  {console.log("p._id", p._id)}
                   <Radio value={p.array}>{p.name}</Radio>
                 </div>
               ))}
@@ -155,6 +156,8 @@ const HomePage = () => {
           <div className="d-flex flex-wrap">
             {products?.map((p) => (
               <div className="card m-2" key={p._id}>
+                  {console.log("p._id --", p._id)}
+
                 <img
                   src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                   className="card-img-top"
