@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AdminMenu from "../../components/Layouts/UserMenu";
 import Layout from "../../components/Layouts/Layout";
-import axios from "axios";
+import axios from "../../axios/axios-config";
 import {toast} from 'react-toastify';
 import { Link } from "react-router-dom";
 const Products = () => {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "./../../components/Layouts/Layout";
 import AdminMenu from "./../../components/Layouts/AdminMenu";
 import {toast} from 'react-toastify';
-import axios from "axios";
+import axios from "../../axios/axios-config";
 import CategoryForm from "../../components/Form/CategoryForm";
 import { Modal } from "antd";
 const CreateCategory = () => {

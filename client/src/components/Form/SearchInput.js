@@ -1,6 +1,6 @@
 import React from "react";
 import { useSearch } from "../../context/Search.js";
-import axios from "axios";
+import axios from "../../axios/axios-config.js";
 import { useNavigate } from "react-router-dom";
 const SearchInput = () => {
   const [values, setValues] = useSearch();

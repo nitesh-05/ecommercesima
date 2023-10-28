@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "../../context/Auth.js";
 import { Outlet } from "react-router-dom";
-import axios from "axios";
+import axios from "../../axios/axios-config.js";
+
 import Spinner from "../Spinner.js";
 
 

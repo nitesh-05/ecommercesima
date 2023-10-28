@@ -3,7 +3,7 @@ import UserMenu from "./../../components/Layouts/UserMenu";
 import Layout from "./../../components/Layouts/Layout";
 import { useAuth } from "../../context/Auth";
 import {toast} from 'react-toastify';
-import axios from "axios";
+import axios from "../../axios/axios-config";
 const Profile = () => {
   //context
   const [auth, setAuth] = useAuth();

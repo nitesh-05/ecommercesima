@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Checkbox, Radio } from "antd";
 import { Prices } from "../components/Layouts/Prices";
 import { useCart } from "../context/Cart";
-import axios from "axios";
+import axios from "../axios/axios-config";
 import {toast} from 'react-toastify';
 import Layout from "./../components/Layouts/Layout";
 import { AiOutlineReload } from "react-icons/ai";
