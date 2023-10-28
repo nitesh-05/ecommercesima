@@ -9,6 +9,7 @@ import { Select } from "antd";
 const { Option } = Select;
 
 const AdminOrders = () => {
+  const baseURL = axios.defaults.baseURL;
   const [status, setStatus] = useState([
     "Not Process",
     "Processing",
@@ -92,7 +93,7 @@ const AdminOrders = () => {
                     <div className="row mb-2 p-3 card flex-row" key={p._id}>
                       <div className="col-md-4">
                         <img
-                          src={`/api/v1/product/product-photo/${p._id}`}
+                          src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                           className="card-img-top"
                           alt={p.name}
                           width="100px"

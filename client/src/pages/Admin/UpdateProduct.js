@@ -8,6 +8,7 @@ import { useNavigate, useParams } from "react-router-dom";
 const { Option } = Select;
 
 const UpdateProduct = () => {
+  const baseURL = axios.defaults.baseURL;
   const navigate = useNavigate();
   const params = useParams();
   const [categories, setCategories] = useState([]);
@@ -153,7 +154,7 @@ const UpdateProduct = () => {
                 ) : (
                   <div className="text-center">
                     <img
-                      src={`/api/v1/product/product-photo/${id}`}
+                      src={`${baseURL}/api/v1/product/product-photo/${id}`}
                       alt="product_photo"
                       height={"200px"}
                       className="img img-responsive"

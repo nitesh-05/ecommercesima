@@ -1,7 +1,10 @@
 import React from "react";
 import Layout from "./../components/Layouts/Layout";
 import { useSearch } from "../context/Search";
+import axios from "../axios/axios-config";
+
 const Search = () => {
+  const baseURL = axios.defaults.baseURL;
   const [values, setValues] = useSearch();
   return (
     <Layout title={"Search results"}>
@@ -17,7 +20,7 @@ const Search = () => {
             {values?.results.map((p) => (
               <div className="card m-2" style={{ width: "18rem" }}>
                 <img
-                  src={`/api/v1/product/product-photo/${p._id}`}
+                  src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                   className="card-img-top"
                   alt={p.name}
                 />

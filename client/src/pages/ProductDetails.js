@@ -8,6 +8,7 @@ import { useCart } from "../context/Cart";
 
 const ProductDetails = () => {
   const params = useParams();
+  const baseURL = axios.defaults.baseURL;
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
   const [relatedProducts, setRelatedProducts] = useState([]);
@@ -45,7 +46,7 @@ const ProductDetails = () => {
       <div className="row container product-details">
         <div className="col-md-6">
           <img
-            src={`/api/v1/product/product-photo/${product._id}`}
+            src={`${baseURL}/api/v1/product/product-photo/${product._id}`}
             className="card-img-top"
             alt={product.name}
             height="300"
@@ -88,7 +89,7 @@ const ProductDetails = () => {
           {relatedProducts?.map((p) => (
             <div className="card m-2" key={p._id}>
               <img
-                src={`/api/v1/product/product-photo/${p._id}`}
+                src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                 className="card-img-top"
                 alt={p.name}
               />

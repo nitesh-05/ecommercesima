@@ -6,6 +6,7 @@ import { useAuth } from "../../context/Auth";
 import moment from "moment";
 
 const Orders = () => {
+  const baseURL = axios.defaults.baseURL;
   const [orders, setOrders] = useState([]);
   const [auth, setAuth] = useAuth();
   const getOrders = async () => {
@@ -61,7 +62,7 @@ const Orders = () => {
                       <div className="row mb-2 p-3 card flex-row" key={p._id}>
                         <div className="col-md-4">
                           <img
-                            src={`/api/v1/product/product-photo/${p._id}`}
+                            src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                             className="card-img-top"
                             alt={p.name}
                             width="100px"

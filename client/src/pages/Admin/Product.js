@@ -5,6 +5,7 @@ import axios from "../../axios/axios-config";
 import {toast} from 'react-toastify';
 import { Link } from "react-router-dom";
 const Products = () => {
+  const baseURL = axios.defaults.baseURL;
   const [products, setProducts] = useState([]);
 
   //getall products
@@ -39,7 +40,7 @@ const Products = () => {
               >
                 <div className="card m-2" style={{ width: "18rem" }}>
                   <img
-                    src={`/api/v1/product/product-photo/${p._id}`}
+                    src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                     className="card-img-top"
                     alt={p.name}
                   />

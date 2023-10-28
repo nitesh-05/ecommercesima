@@ -11,6 +11,7 @@ import "../styles/Homepage.css";
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const baseURL = axios.defaults.baseURL;
   const [cart, setCart] = useCart();
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -155,7 +156,7 @@ const HomePage = () => {
             {products?.map((p) => (
               <div className="card m-2" key={p._id}>
                 <img
-                  src={`/api/v1/product/product-photo/${p._id}`}
+                  src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                   className="card-img-top"
                   alt={p.name}
                 />
