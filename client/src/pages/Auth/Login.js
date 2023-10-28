@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Layout from '../../components/Layouts/Layout';
-import axios from "axios";
+import axios from './axios-config.js'; // Import your custom instance
 import { useNavigate, useLocation } from "react-router-dom";
 import {toast} from 'react-toastify';
 import "../../styles/AuthStyles.css";
