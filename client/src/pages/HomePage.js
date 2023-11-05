@@ -4,7 +4,7 @@ import { Checkbox, Radio } from "antd";
 import { Prices } from "../components/Layouts/Prices";
 import { useCart } from "../context/Cart";
 import axios from "../axios/axios-config";
-import {toast} from 'react-toastify';
+import { toast } from "react-toastify";
 import Layout from "./../components/Layouts/Layout";
 import { AiOutlineReload } from "react-icons/ai";
 import "../styles/Homepage.css";
@@ -88,6 +88,7 @@ const HomePage = () => {
     setChecked(all);
   };
   useEffect(() => {
+    // console.log("==================================", radio.length);
     if (!checked.length || !radio.length) getAllProducts();
   }, [checked.length, radio.length]);
 
@@ -121,14 +122,12 @@ const HomePage = () => {
         <div className="col-md-3 filters">
           <h4 className="text-center">Filter By Category</h4>
           {categories?.map((c) => (
-          <div className="d-flex flex-column" key={c._id}>
-              <Checkbox
-                onChange={(e) => handleFilter(e.target.checked, c._id)}
-              >
+            <div className="d-flex flex-column" key={c._id}>
+              <Checkbox onChange={(e) => handleFilter(e.target.checked, c._id)}>
                 {c.name}
               </Checkbox>
-          </div>
-            ))}
+            </div>
+          ))}
 
           {/* price filter */}
           <h4 className="text-center mt-4">Filter By Price</h4>
@@ -156,7 +155,7 @@ const HomePage = () => {
           <div className="d-flex flex-wrap">
             {products?.map((p) => (
               <div className="card m-2" key={p._id}>
-                  {console.log("p._id --", p._id)}
+                {console.log("p._id --", p._id)}
 
                 <img
                   src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
@@ -167,9 +166,9 @@ const HomePage = () => {
                   <div className="card-name-price">
                     <h5 className="card-title">{p.name}</h5>
                     <h5 className="card-title card-price">
-                      {p.price.toLocaleString("en-US", {
+                      {p.price.toLocaleString("en-IN", {
                         style: "currency",
-                        currency: "USD",
+                        currency: "INR",
                       })}
                     </h5>
                   </div>
