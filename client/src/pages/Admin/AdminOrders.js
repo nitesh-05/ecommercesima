@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "../../axios/axios-config";
-import {toast} from 'react-toastify'
+import { toast } from "react-toastify";
 import AdminMenu from "../../components/Layouts/AdminMenu";
 import Layout from "../../components/Layouts/Layout";
 import { useAuth } from "../../context/Auth";
@@ -23,6 +23,8 @@ const AdminOrders = () => {
   const getOrders = async () => {
     try {
       const { data } = await axios.get("/api/v1/auth/all-orders");
+
+      console.log(JSON.stringify(data));
       setOrders(data);
     } catch (error) {
       console.log(error);
@@ -82,7 +84,10 @@ const AdminOrders = () => {
                         </Select>
                       </td>
                       <td>{o?.buyer?.name}</td>
-                      <td>{moment(o?.createAt).fromNow()}</td>
+                      <td>{moment(o?.createdAt).fromNow()}</td>
+
+                      {/* <td>{o?.buyer?.createdAt}</td> */}
+
                       <td>{o?.payment.success ? "Success" : "Failed"}</td>
                       <td>{o?.products?.length}</td>
                     </tr>

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import AdminMenu from "../../components/Layouts/UserMenu";
+import AdminMenu from "../../components/Layouts/AdminMenu";
 import Layout from "../../components/Layouts/Layout";
 import axios from "../../axios/axios-config";
-import {toast} from 'react-toastify';
+import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
 const Products = () => {
   const baseURL = axios.defaults.baseURL;
@@ -15,7 +15,7 @@ const Products = () => {
       setProducts(data.products);
     } catch (error) {
       console.log(error);
-      toast.error("Someething Went Wrong");
+      toast.error("Something Went Wrong");
     }
   };
 
