@@ -5,7 +5,7 @@ import {
   updatePassword,
    getOrdersController,
    forgotPassword,
-    orderStatusController, getAllOrdersController,testController,updateProfileController} from '../controller/authConroller.js';
+    orderStatusController, getAllOrdersController,testController,updateProfileController,adminregisterController,} from '../controller/authConroller.js';
 import { requireSignIn, isAdmin } from '../middlewares/authMiddleware.js';
 
 //router object
@@ -15,8 +15,14 @@ const router = express.Router();
 //REGISTER || METHOD POST
 router.post("/register", registerController);
 
+router.post("/admin-register", adminregisterController);
+
+
 //LOGIN || POST
 router.post("/login", loginController);
+
+// router.post("/admin-login", adminloginController);
+
 
 
 // //Forgot Password || POST

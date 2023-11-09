@@ -3,6 +3,7 @@ import Layout from "../../components/Layouts/Layout.js";
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import "../../styles/AuthStyles.css";
+import axios from '../../axios/axios-config.js';
 
 // const ForgotPassword = () => {
 //   const { id, token } = useParams();
@@ -80,21 +81,20 @@ const ForgotPassword = () => {
 
   const userValid = async () => {
     try {
-      const res = await fetch(`/api/v1/auth/forgotpassword/${id}/${token}`, {
-        method: 'GET',
+      const response = await axios.get(`/api/v1/auth/forgotpassword/${id}/${token}`, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      // debugger;
-      if (!res.ok) {
+  
+      if (response.status !== 200) {
         throw new Error('User validation failed');
       }
-
-      const data = await res.json();
-
+  
+      const data = response.data;
+  
       console.log(data); // Handle the response data as needed
-
+  
       // You might want to redirect or display a message based on the response data
       if (data.status === 201) {
         console.log('User is valid');
@@ -108,16 +108,13 @@ const ForgotPassword = () => {
       });
     }
   };
-
   const setval = (e) => {
     setPassword(e.target.value);
   };
 
   const sendpassword = async (e) => {
     e.preventDefault();
-
-
-
+  
     if (password === '') {
       toast.error('Password is required!', {
         position: 'top-center',
@@ -129,22 +126,20 @@ const ForgotPassword = () => {
       });
       return;
     }
-
+  
     try {
-      const res = await fetch(`/api/v1/auth/updatePassword/${id}/${token}`, {
-        method: 'POST',
+      const response = await axios.post(`/api/v1/auth/updatePassword/${id}/${token}`, { password }, {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ password }),
       });
-
-      const data = await res.json();
-
-      if (!res.ok) {
+  
+      if (response.status !== 201) {
         throw new Error('Password update failed');
       }
-
+  
+      const data = response.data;
+  
       if (data.status === 201) {
         setPassword('');
         setMessage(true);
@@ -160,7 +155,6 @@ const ForgotPassword = () => {
       });
     }
   };
-
   useEffect(() => {
     userValid();
     setTimeout(() => {

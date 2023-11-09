@@ -8,9 +8,14 @@ import { toast } from "react-toastify";
 import Layout from "./../components/Layouts/Layout";
 import { AiOutlineReload } from "react-icons/ai";
 import "../styles/Homepage.css";
+import { useAuth } from "../context/Auth";
+import { css } from '@emotion/react';
+import { BeatLoader } from 'react-spinners';
+
 
 const HomePage = () => {
   const navigate = useNavigate();
+  const [auth] = useAuth();
   const baseURL = axios.defaults.baseURL;
   const [cart, setCart] = useCart();
   const [products, setProducts] = useState([]);
@@ -20,6 +25,12 @@ const HomePage = () => {
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+
+  const override = css`
+    display: block;
+    margin: 0 auto;
+  `;
+
 
   //get all cat
   const getAllCategory = async () => {
@@ -78,15 +89,37 @@ const HomePage = () => {
   };
 
   // filter by cat
-  const handleFilter = (value, id) => {
-    let all = [...checked];
-    if (value) {
-      all.push(id);
-    } else {
-      all = all.filter((c) => c !== id);
+  // const handleFilter = (value, id) => {
+  //   setLoading(true);
+  //   let all = [...checked];
+  //   if (value) {
+  //     all.push(id);
+  //   } else {
+  //     all = all.filter((c) => c !== id);
+  //   }
+  //   setChecked(all);
+  //   setLoading(false);
+  // };
+  const handleFilter = async (value, id) => {
+    setLoading(true);
+    try {
+      await new Promise((resolve) => {
+        setTimeout(resolve, 3000); // Simulates a 3-second delay
+      });
+      let all = [...checked];
+      if (value) {
+        all.push(id);
+      } else {
+        all = all.filter((c) => c !== id);
+      }
+      setChecked(all);
+    } catch (error) {
+      console.error('Error:', error);
+    } finally { 
+     setLoading(false);
     }
-    setChecked(all);
   };
+  
   useEffect(() => {
     // console.log("==================================", radio.length);
     if (!checked.length || !radio.length) getAllProducts();
@@ -121,14 +154,16 @@ const HomePage = () => {
       <div className="container-fluid row mt-3 home-page">
         <div className="col-md-3 filters">
           <h4 className="text-center">Filter By Category</h4>
+          <div className="d-flex flex-column" >
           {categories?.map((c) => (
-            <div className="d-flex flex-column" key={c._id}>
+           <div key={c._id}>
               <Checkbox onChange={(e) => handleFilter(e.target.checked, c._id)}>
                 {c.name}
               </Checkbox>
+              </div>
+                     ))}
             </div>
-          ))}
-
+   
           {/* price filter */}
           <h4 className="text-center mt-4">Filter By Price</h4>
           <div className="d-flex flex-column">
@@ -152,6 +187,11 @@ const HomePage = () => {
         </div>
         <div className="col-md-9 ">
           <h1 className="text-center">All Products</h1>
+          {loading && (
+          <div className="spinner">
+            <BeatLoader color={'#123abc'} css={override} loading={loading} size={15} />
+          </div>
+        )}
           <div className="d-flex flex-wrap">
             {products?.map((p) => (
               <div className="card m-2" key={p._id}>
@@ -172,8 +212,9 @@ const HomePage = () => {
                       })}
                     </h5>
                   </div>
-                  <p className="card-text ">
-                    {p.description.substring(0, 60)}...
+                  <p className="card-text " 
+                    style={{ height: "1.5em", overflow: "hidden" }}>
+                    {p.description.substring(0, 60)}
                   </p>
                   <div className="card-name-price">
                     <button
@@ -182,7 +223,61 @@ const HomePage = () => {
                     >
                       More Details
                     </button>
+
+                    {auth?.user?.role !== 1 && (
                     <button
+                      className={`btn btn-dark ms-1`}
+                      
+                      onClick={() => {
+                        if (auth?.user?.role === 1) {
+                          // Role is 1, you can add custom logic here or show a message.
+                          // Example: alert("Role 1 is not allowed to perform this action");
+                          return;
+                        }
+
+                        if (cart.find((item) => item._id === p._id)) {
+                          // The product is already in the cart, navigate to the cart.
+                          navigate("/cart");
+                        } else {
+                          // The product is not in the cart, add it to the cart.
+                          setCart([...cart, p]);
+                          localStorage.setItem(
+                            "cart",
+                            JSON.stringify([...cart, p])
+                          );
+                          toast.success("Item Added to Cart");
+                        }
+                      }}
+                 
+                    >
+                      {cart.find((item) => item._id === p._id)
+                        ? "GO TO CART"
+                        : "ADD TO CART"}
+                    </button>
+                    )}
+
+                    {/* <button
+                      className="btn btn-dark ms-1 mb-0"
+                      onClick={() => {
+                        if (cart.find((item) => item._id === p._id)) {
+                          // The product is already in the cart, navigate to the cart.
+                          navigate("/cart");
+                        } else {
+                          // The product is not in the cart, add it to the cart.
+                          setCart([...cart, p]);
+                          localStorage.setItem(
+                            "cart",
+                            JSON.stringify([...cart, p])
+                          );
+                          toast.success("Item Added to Cart");
+                        }
+                      }}
+                    >
+                      {cart.find((item) => item._id === p._id)
+                        ? "GO TO CART"
+                        : "ADD TO CART"}
+                    </button> */}
+                    {/* <button
                       className="btn btn-dark ms-1"
                       onClick={() => {
                         setCart([...cart, p]);
@@ -194,7 +289,7 @@ const HomePage = () => {
                       }}
                     >
                       ADD TO CART
-                    </button>
+                    </button> */}
                   </div>
                 </div>
               </div>
@@ -202,22 +297,41 @@ const HomePage = () => {
           </div>
           <div className="m-2 p-3">
             {products && products.length < total && (
-              <button
-                className="btn loadmore"
-                onClick={(e) => {
-                  e.preventDefault();
-                  setPage(page + 1);
-                }}
-              >
-                {loading ? (
-                  "Loading ..."
-                ) : (
-                  <>
-                    {" "}
-                    Loadmore <AiOutlineReload />
-                  </>
-                )}
-              </button>
+               <button
+              className="btn loadmore"
+              onClick={(e) => {
+                    e.preventDefault();
+                    setPage(page + 1);
+                 }}
+            >
+              {loading ? (
+                "Loading ..."
+              ) : (
+                <>
+                  {" "}
+                  Loadmore <AiOutlineReload />
+                </>
+              )}
+            </button>
+              
+              
+
+              // <button
+              //   className="btn loadmore"
+              //   onClick={(e) => {
+              //     e.preventDefault();
+              //     setPage(page + 1);
+              //   }}
+              // >
+              //   {loading ? (
+              //     "Loading ..."
+              //   ) : (
+              //     <>
+              //       {" "}
+              //       Loadmore <AiOutlineReload />
+              //     </>
+              //   )}
+              // </button>
             )}
           </div>
         </div>

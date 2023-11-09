@@ -24,8 +24,8 @@ const Products = () => {
     getAllProducts();
   }, []);
   return (
-    <Layout>
-      <div className="row dashboard">
+    <Layout className="container-flui m-3 p-3">
+      <div className="row dashboard container-flui m-3 p-3">
         <div className="col-md-3">
           <AdminMenu />
         </div>
@@ -43,10 +43,11 @@ const Products = () => {
                     src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                     className="card-img-top"
                     alt={p.name}
+                    style={{ width: "100%", height: "200px" }} // Set the width and height here
                   />
                   <div className="card-body">
                     <h5 className="card-title">{p.name}</h5>
-                    <p className="card-text">{p.description}</p>
+                    <p className="card-text"  style={{ height: "1.5em", overflow: "hidden" }}>{p.description}</p>
                   </div>
                 </div>
               </Link>
