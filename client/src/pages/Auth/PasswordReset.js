@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams, NavLink } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Layout from "../../components/Layouts/Layout.js";
+import axios from '../../axios/axios-config.js';
 
 const PasswordReset= () => {
     const [message, setMessage] = useState("");
@@ -15,31 +16,34 @@ const PasswordReset= () => {
         e.preventDefault();
 
         if (email === "") {
-            toast.error("email is required!", {
+            toast.error("Email is required!", {
                 position: "top-center"
             });
         } else if (!email.includes("@")) {
-            toast.warning("includes @ in your email!", {
+            toast.warning("Include @ in your email!", {
                 position: "top-center"
             });
         } else {
-            const res = await fetch("/api/v1/auth/sendpasswordlink", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({ email })
-            });
+            try {
+                const response = await axios.post("/api/v1/auth/sendpasswordlink", { email }, {
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                });
 
-            const data = await res.json();
-
-            if (data.status === 201) {
-                setEmail("");
-                setMessage(true)
-            } else {
-                toast.error("Invalid User",{
+                if (response.status === 201) {
+                    setEmail("");
+                    setMessage(true);
+                } else {
+                    toast.error("Invalid User", {
+                        position: "top-center"
+                    });
+                }
+            } catch (error) {
+                console.error("Error:", error);
+                toast.error("An error occurred while sending the link", {
                     position: "top-center"
-                })
+                });
             }
         }
     }

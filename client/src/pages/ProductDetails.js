@@ -5,9 +5,11 @@ import { useParams, useNavigate } from "react-router-dom";
 import "../styles/ProductDetailsStyles.css";
 import { toast } from "react-toastify";
 import { useCart } from "../context/Cart";
+import { useAuth } from "../context/Auth";
 
 const ProductDetails = () => {
   const params = useParams();
+  const [auth] = useAuth();
   const baseURL = axios.defaults.baseURL;
   const navigate = useNavigate();
   const [product, setProduct] = useState({});
@@ -66,7 +68,40 @@ const ProductDetails = () => {
             })}
           </h6>
           <h6>Category : {product?.category?.name}</h6>
+          {auth?.user?.role !== 1 && (
           <button
+            className={`btn btn-dark ms-1${
+              auth?.user?.role === 1 ? " disabled" : ""
+            }`}
+            onClick={() => {
+              if (auth?.user?.role === 1) {
+                // Role is 1, you can add custom logic here or show a message.
+                // Example: alert("Role 1 is not allowed to perform this action");
+                return;
+              }
+
+              if (cart.find((item) => item._id === product._id)) {
+                // The product is already in the cart, navigate to the cart.
+                navigate("/cart");
+              } else {
+                // The product is not in the cart, add it to the cart.
+                setCart([...cart, product]);
+                localStorage.setItem(
+                  "cart",
+                  JSON.stringify([...cart, product])
+                );
+                toast.success("Item Added to Cart");
+              }
+            }}
+            disabled={auth?.user?.role === 1}
+          >
+            {cart.find((item) => item._id === product._id)
+              ? "GO TO CART"
+              : "ADD TO CART"}
+          </button>
+          )}
+
+          {/* <button
             class="btn btn-secondary ms-1"
             onClick={() => {
               setCart([...cart, product]);
@@ -75,7 +110,7 @@ const ProductDetails = () => {
             }}
           >
             ADD TO CART
-          </button>
+          </button> */}
         </div>
       </div>
       <hr />
@@ -112,6 +147,7 @@ const ProductDetails = () => {
                   >
                     More Details
                   </button>
+                  {auth?.user?.role !== 1 && (
                   <button
                     className="btn btn-dark ms-1"
                     onClick={() => {
@@ -123,8 +159,11 @@ const ProductDetails = () => {
                       toast.success("Item Added to cart");
                     }}
                   >
-                    ADD TO CART
+                    {cart.find((item) => item._id === product._id)
+              ? "GO TO CART"
+              : "ADD TO CART"}
                   </button>
+                  )}
                 </div>
               </div>
             </div>

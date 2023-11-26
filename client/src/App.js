@@ -7,6 +7,7 @@ import Contact from "./pages/Contact";
 import Pagenotfound from "./pages/Pagenotfound";
 import Policy from "./pages/Policy";
 import Resister from "./pages/Auth/Resister";
+
 // import { ToastContainer, } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Login from "./pages/Auth/Login";
@@ -29,6 +30,8 @@ import CategoryProduct from "./pages/CategoryProduct";
 import CartPage from "./pages/CartPage";
 import AdminOrders from "./pages/Admin/AdminOrders";
 import PasswordReset from "./pages/Auth/PasswordReset";
+import AdminResister from "./pages/Admin/AdminResister";
+
 
 
 
@@ -46,9 +49,11 @@ function App() {
    
       <Route path='/search' element= {<Search/>}/>
       <Route path='/resister' element= {<Resister/>}/>
+      <Route path='/admin-resister' element= {<AdminResister/>}/>
       <Route path='/passwordreset' element= {<PasswordReset/>}/>
       <Route path="/forgot-password/:id/:token" element={<ForgotPasssword/>} />
       <Route path='/login' element= {<Login/>}/>
+     
       <Route path="/dashboard" element={<PrivateRoute/>}>
           <Route path="user" element={<Dashboard/>} />
           <Route path="user/orders" element={<Orders/>} />

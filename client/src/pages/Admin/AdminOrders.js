@@ -6,6 +6,8 @@ import Layout from "../../components/Layouts/Layout";
 import { useAuth } from "../../context/Auth";
 import moment from "moment";
 import { Select } from "antd";
+import Swal from "sweetalert2";
+
 const { Option } = Select;
 
 const AdminOrders = () => {
@@ -45,9 +47,65 @@ const AdminOrders = () => {
       console.log(error);
     }
   };
+
+  //-----------------------------------
+  const sendTiwiloSms = async (title, description) => {
+    try {
+      const { data } = await axios.post("/api/v1/tiwlio/sms", {
+        title: title,
+        description: description,
+      });
+      console.log("data", data);
+      if (data?.success) {
+        //  Swal.fire(
+        //   `Title: ${title}, Description: ${description}`,
+        //   "",
+        //   "success"
+        // );
+        toast.success("Sms Send Successfully");
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Something Went Wrong");
+    }
+  };
+  const openSmsModel = () => {
+    Swal.fire({
+      title: "Enter Title and Description for the SMS",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: "Don't save",
+      html:
+        '<input id="title" class="swal2-input" placeholder="Title">' +
+        '<input id="description" class="swal2-input" placeholder="Description">',
+      preConfirm: () => {
+        const title = document.getElementById("title").value;
+        const description = document.getElementById("description").value;
+        return {
+          title: title,
+          description: description,
+        };
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const { title, description } = result.value;
+
+        sendTiwiloSms(title, description);
+
+        // Swal.fire(
+        //   `Title: ${title}, Description: ${description}`,
+        //   "",
+        //   "success"
+        // );
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
   return (
     <Layout title={"All Orders Data"}>
-      <div className="row dashboard">
+      <div className=" m-3 row dashboard ">
         <div className="col-md-3">
           <AdminMenu />
         </div>
@@ -65,6 +123,13 @@ const AdminOrders = () => {
                       <th scope="col"> date</th>
                       <th scope="col">Payment</th>
                       <th scope="col">Quantity</th>
+                      <button
+                        type="button"
+                        className="btn btn-success"
+                        onClick={openSmsModel}
+                      >
+                        Send SMS
+                      </button>
                     </tr>
                   </thead>
                   <tbody>
@@ -96,15 +161,26 @@ const AdminOrders = () => {
                 <div className="container">
                   {o?.products?.map((p, i) => (
                     <div className="row mb-2 p-3 card flex-row" key={p._id}>
-                      <div className="col-md-4">
+                      <div
+                        className="col-md-4"
+                        style={{
+                          maxWidth: "200px",
+                          maxHeight: "200px",
+                          overflow: "hidden",
+                        }}
+                      >
                         <img
                           src={`${baseURL}/api/v1/product/product-photo/${p._id}`}
                           className="card-img-top"
                           alt={p.name}
-                          width="100px"
-                          height={"100px"}
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
                         />
                       </div>
+
                       <div className="col-md-8">
                         <p>{p.name}</p>
                         <p>{p.description.substring(0, 30)}</p>

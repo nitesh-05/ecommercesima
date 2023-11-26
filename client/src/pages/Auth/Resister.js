@@ -43,7 +43,7 @@ const Resister = () => {
     <Layout title="Register - Ecommer App">
       <div className="form-container" >
         <form onSubmit={handleSubmit}>
-          <h4 className="title">REGISTER FORM</h4>
+          <h4 className="title">USER REGISTER FORM</h4>
           <div className="mb-3">
             <input
               type="text"

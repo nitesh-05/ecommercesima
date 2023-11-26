@@ -11,25 +11,69 @@ const CartPage = () => {
   const baseURL = axios.defaults.baseURL;
   const [auth, setAuth] = useAuth();
   const [cart, setCart] = useCart();
+  const [quantity, setQuantity] = useState({}); //----------------------
+  const [productAmount, setProductAmount] = useState({}); //----------------------
   const [clientToken, setClientToken] = useState("");
   const [instance, setInstance] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+//---------------------new------------------------------------------------
+ // Increment the quantity of a product
+ const incrementQuantity = (productId) => {
+  setQuantity((prevQuantity) => {
+    const newQuantity = { ...prevQuantity };
+    newQuantity[productId] = (newQuantity[productId] || 0) + 1;
+    // Store the updated quantity in local storage
+    localStorage.setItem("quantity", JSON.stringify(newQuantity));
+    return newQuantity;
+  });
+};
+
+
+// Decrement the quantity of a product
+const decrementQuantity = (productId) => {
+  if (quantity[productId] > 1) {
+    setQuantity((prevQuantity) => {
+      const newQuantity = { ...prevQuantity };
+      newQuantity[productId] = newQuantity[productId] - 1;
+      // Store the updated quantity in local storage
+      localStorage.setItem("quantity", JSON.stringify(newQuantity));
+      return newQuantity;
+    });
+  }
+};
+//----------------------------------------------
+useEffect(() => {
+  // Load stored quantity from local storage
+  const storedQuantity = JSON.parse(localStorage.getItem("quantity"));
+  if (storedQuantity) {
+    setQuantity(storedQuantity);
+  }
+  // ...
+}, []);
+
+//---------------------------------------------------------------------
   //total price
-  const totalPrice = () => {
-    try {
-      let total = 0;
-      cart?.map((item) => {
-        total = total + item.price;
-      });
-      return total.toLocaleString("en-IN", {
-        style: "currency",
-        currency: "INR",
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  useEffect(() => {
+    const productAmounts = {};
+    cart.forEach((product) => {
+      productAmounts[product._id] =
+        product.price * (quantity[product._id] || 1);
+    });
+    setProductAmount(productAmounts);
+  }, [cart, quantity]);
+
+  // Calculate the total amount for all products in the cart
+  const calculateTotalAmount = () => {
+    let total = 0;
+    cart.forEach((product) => {
+      total += productAmount[product._id] || 0;
+    });
+    return total.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+    });
   };
 
   //detele item
@@ -116,11 +160,39 @@ const CartPage = () => {
                   <p>Price : {p.price}</p>
                 </div>
                 <div className="col-md-4 cart-remove-btn">
-                  <button
-                    className="btn btn-danger"
+                <button
+                    style={{
+                      margin: "5px",
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                    className="btn btn-light"
                     onClick={() => removeCartItem(p._id)}
                   >
                     Remove
+                  </button>
+
+                
+                 
+                  <button
+                    style={{
+                      margin: "5px",
+                      boxShadow: "0 6px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                    className="btn btn-light"
+                    onClick={() => decrementQuantity(p._id)}
+                  >
+                    -
+                  </button>
+                  <span>{quantity[p._id] || 0}</span>
+                  <button
+                    style={{
+                      margin: "5px",
+                      boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+                    }}
+                    className="btn btn-light"
+                    onClick={() => incrementQuantity(p._id)}
+                  >
+                    +
                   </button>
                 </div>
               </div>
@@ -130,7 +202,7 @@ const CartPage = () => {
             <h2>Cart Summary</h2>
             <p>Total | Checkout | Payment</p>
             <hr />
-            <h4>Total : {totalPrice()} </h4>
+            <h4>Total : {calculateTotalAmount ()} </h4>
             {auth?.user?.address ? (
               <>
                 <div className="mb-3">
